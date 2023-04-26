@@ -123,8 +123,7 @@ const createHtml = (data) => {
         let longString = ""
         inner = addCell(inner, 'table__cell table__cell_sidebar', `Week ${data[0].week[weekNumber].value}`)
         const isAlternate = data[0].weekValue % 2 === 0
-        //circle back through arrays ands create a week for each pass with its days
-        // use get utc day to deteermine where to start
+        
         for (dayOfWeek in days) {
             let isValid = dayOfMonthCounter <= daysInMonth + startDay - 1 
             if (isValid) {
