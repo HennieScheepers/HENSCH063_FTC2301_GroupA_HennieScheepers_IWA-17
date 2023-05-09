@@ -61,13 +61,6 @@ const createData = () => {
         value[0].week.push({
             value: parseInt(weekIndex) + 1
         });
-        // while(parseInt(dayIndex) !== startDay){
-        //         value[0].day.push({
-        //             dayOfWeek: '',
-        //             value:''
-        //         })
-        //         dayIndex ++
-        //     }
         // Fill the day array 
         for (dayIndex in days) {
             let isValid = dayCounter <= daysInMonth ;
