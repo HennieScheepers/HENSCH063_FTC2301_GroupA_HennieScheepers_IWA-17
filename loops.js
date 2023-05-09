@@ -22,7 +22,7 @@ const getDaysInMonth = (date) => new Date(date.getFullYear(), date.getMonth() + 
  */
 const createArray = (length) => {
     const result = []
-
+    // fixed for loop
     for (let i = 0; i < length; i++) {
         result[i] = ''
     }
@@ -36,55 +36,68 @@ const createData = () => {
     /**
      * Days in the current month
      */
-    const daysInMonth = getDaysInMonth(today)
-    // need first day in month value
-    // increment from 1 to end of month
-    // add dayofweek and new value to array. new value is position in week day index + first day
-    Date.prototype.getWeekOfMonth = function () {
+    //added function to get the total amount of days in the month
+    const daysInMonth = getDaysInMonth(today);
+        Date.prototype.getWeekOfMonth = function () {
         var firstDay = new Date(this.setDate(1)).getDay();
         var totalDays = new Date(this.getFullYear(), this.getMonth() + 1, 0).getDate();
         return Math.ceil((firstDay + totalDays) / 7);
     }
-    let totalWeeks = new Date().getWeekOfMonth();
+    // Calculation of total weeks in month
+        let totalWeeks = new Date().getWeekOfMonth();
+    // create array with the correct number of weeks
     const weeks = createArray(totalWeeks)
     const days = createArray(7)
     let value = [{
         week: [],
         day: []
     }]
+
     let dayCounter = 1
     let dayIndex = 0
+    let dayIndexCatchup = 0
+    // Fill the week array
     for (let weekIndex in weeks) {
         value[0].week.push({
             value: parseInt(weekIndex) + 1
         });
-        let newValue = ''
-        while(parseInt(dayIndex) !== startDay){
+        // while(parseInt(dayIndex) !== startDay){
+        //         value[0].day.push({
+        //             dayOfWeek: '',
+        //             value:''
+        //         })
+        //         dayIndex ++
+        //     }
+        // Fill the day array 
+        for (dayIndex in days) {
+            let isValid = dayCounter <= daysInMonth ;
+            let newValue = parseInt(dayIndex) + startDay
+
+            if ((parseInt(dayIndexCatchup)) < startDay){
                 value[0].day.push({
                     dayOfWeek: '',
                     value:''
                 })
-                dayIndex ++
-            }
-        for (dayIndex in days) {
-            // day.getDAte can't surpass days in month
-            let isValid = dayCounter <= daysInMonth ;
-            let newValue = parseInt(dayIndex) + startDay
+                dayIndexCatchup ++
+            } else {
 
-            if (isValid && newValue < 8) {
-                value[0].day.push({
-                    dayOfWeek: newValue,
-                    value: dayCounter
+                // Check if overall day counter does not exceed the days in month
+                // Check if day in week counter does not exceed the number of days in a week
+                if (isValid && newValue < 8) {
+                    value[0].day.push({
+                        dayOfWeek: newValue,
+                        value: dayCounter
+                    }
+                    )
+                    dayCounter ++
+                } else if (isValid) {
+                    value[0].day.push({
+                        dayOfWeek: newValue - 7,
+                        value: dayCounter
+                    }
+                    )
+                    dayCounter++
                 }
-                )
-                dayCounter ++
-            } else if (isValid) {
-                value[0].day.push({
-                    dayOfWeek: newValue - 7,
-                    value: dayCounter
-                }
-                )
-                dayCounter++
             }
         }
     }
@@ -93,6 +106,7 @@ const createData = () => {
 
 console.log(createData())
 
+//Fixed the addCell function
 const addCell = (existing, classString, value) => {
     const result = /* html */ `
         <td class="${classString}">
@@ -104,10 +118,6 @@ const addCell = (existing, classString, value) => {
     return result
 }
 
-/**
- * @type {Array} 
- */
-
 const createHtml = (data) => {
     let today = new Date()
     let result = ''
@@ -117,6 +127,8 @@ const createHtml = (data) => {
     let startDay = new Date(today.getFullYear(), today.getMonth(), 1)
     startDay = startDay.getDay()
 
+    // Nested for loops to create the days in the week and the weeks
+    // Create the week value with days next to it
     for (let weekNumber in data[0].week) {
         let dayOfWeek = 0
         let inner = ""
